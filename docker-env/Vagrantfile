@@ -1,0 +1,18 @@
+Vagrant.configure("2") do |config|
+  # 小余的个人PC是M1系统的，所以使用arm架构的centos9，如果是window或者linux，可以前往Vagrant Cloud搜索
+  config.vm.box = "jdputsch/centos-9-aarch64"  #config.vm.box = "generic/centos9s"
+
+  # 设置系统名称是xiaoyu
+  config.vm.hostname = "xiaoyu"
+  # 固定虚拟机IP，可以通过这个IP访问虚拟机
+  config.vm.network "private_network", ip: "192.168.33.33"
+  config.vm.provider :parallels do |prl|
+    # 内存限制 200MB
+    prl.memory = 200
+    # CPU限制 2C
+    prl.cpus = 2
+  end
+
+  # 虚拟机启动之后，执行setup脚本，主要用来安装docker工具
+  config.vm.provision "shell", path: "setup.sh"
+end
