@@ -1,15 +1,16 @@
 Vagrant.configure("2") do |config|
-  config.vm.box = "jouryjc0409/aarch-docker-env"
-  config.vm.box_version = "1.0.0"
 
-  # 固定虚拟机IP为192.168.33.30
-  config.vm.network "private_network", ip: "192.168.33.30"
+  # 配置了端口转发的虚拟机，主要用来测试 host 的网络模式
+  config.vm.define "forwarded" do |forwarded|
+    forwarded.vm.box = "jouryjc0409/aarch-docker-env"
+    forwarded.vm.network "private_network", ip: "192.168.33.31"
 
-  # 安装 netstat 工具
-  config.vm.provision "shell", inline: <<-SHELL
-    # 更新包
-    sudo yum -y update
-    # 安装网络的调试工具
-    sudo yum -y install net-tools lsof
-  SHELL
+    forwarded.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "192.168.1.100"
+  end
+
+  # 正常测试的虚拟机配置
+  config.vm.define "default" do |test|
+    test.vm.box = "jouryjc0409/aarch-docker-env"
+    test.vm.network "private_network", ip: "192.168.33.33"
+  end
 end
