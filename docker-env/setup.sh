@@ -11,3 +11,6 @@ systemctl enable docker
 
 # 我们通过vagrant ssh进入虚拟机环境，默认是vagrant用户，如果不加这一行，每次调用docker命令都需要加sudo，偷懒~
 usermod -aG docker vagrant
+# docker-compose
+mv /home/docker-compose /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
